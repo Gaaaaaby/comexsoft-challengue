@@ -1,0 +1,29 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+
+# Types:
+# feat:     A new feature
+# fix:      A bug fix
+# docs:     Documentation only changes
+# style:    Changes that do not affect the meaning of the code
+# refactor: A code change that neither fixes a bug nor adds a feature
+# perf:     A code change that improves performance
+# test:     Adding missing tests or correcting existing tests
+# chore:    Changes to the build process or auxiliary tools
+# clean:    Code cleanup, removing unused imports, etc.
+
+# Scopes:
+# scraper:  Changes to the main scraper functionality
+# config:   Configuration files and settings
+# utils:    Utility functions and helpers
+# tests:    Test files and test utilities
+# docs:     Documentation files
+
+# Examples:
+# feat(scraper): add nutritional data extraction
+# fix(config): remove duplicate settings in settings.py
+# clean(utils): remove unused imports from selenium_helpers
+# docs: add commit message guidelines
