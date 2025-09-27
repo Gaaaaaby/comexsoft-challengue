@@ -5,10 +5,11 @@ import re
 import requests
 from requests.exceptions import RequestException
 
-from bm_scraper.bm_scraper.spiders.items import BmProductItem
-from bm_scraper.bm_scraper.config.proxy_config import PROXIES, API_HEADERS
-from bm_scraper.bm_scraper.utils.selenium_driver import setup_driver
-from bm_scraper.bm_scraper.utils.cookie_manager import get_location_cookies
+from bm_scraper.spiders.items import BmProductItem
+from bm_scraper.config.proxy_config import PROXIES, API_HEADERS
+from bm_scraper.utils.selenium_driver import setup_driver
+from bm_scraper.utils.cookie_manager import get_location_cookies
+
 
 GENERIC_API_URL_TEMPLATE = "https://www.online.bmsupermercados.es/api/rest/V1.0/catalog/product?page={page}&limit=20&offset=0&orderById=7&showRecommendations=false&categories=1690"
 
