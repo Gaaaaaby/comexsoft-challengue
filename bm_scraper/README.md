@@ -1,16 +1,14 @@
 # BM Supermercados Scraper
 
-Scraper ético para extraer información de productos de BM Supermercados.
+Scraper para extraer información de productos de BM Supermercados.
 
-## 🚀 Características
+## Características
 
-- ✅ **Scraping Ético**: Respeta robots.txt y implementa rate limiting
-- ✅ **Arquitectura Modular**: Separación clara de responsabilidades
-- ✅ **Configuración Segura**: Credenciales en variables de entorno
-- ✅ **Logging Completo**: Sistema de logs para monitoreo
-- ✅ **Rate Limiting**: Control de velocidad para no sobrecargar el servidor
+-  **Arquitectura Modular**: Separación clara de responsabilidades
+-  **Configuración Segura**: Credenciales en variables de entorno
+-  **Rate Limiting**: Control de velocidad para no sobrecargar el servidor
 
-## 📁 Estructura del Proyecto
+##  Estructura del Proyecto
 
 ```
 bm_scraper/
@@ -33,7 +31,7 @@ bm_scraper/
 └── env.example                  # Ejemplo de variables de entorno
 ```
 
-## ⚙️ Configuración
+## Configuración
 
 ### 1. Variables de Entorno
 
@@ -56,7 +54,7 @@ PROXY_PASS=tu_password
 pip install -r requirements.txt
 ```
 
-## 🏃‍♂️ Uso
+## Uso
 
 ### Ejecutar el Scraper
 
@@ -72,7 +70,7 @@ cd bm_scraper
 python -m bm_scraper.spiders.bebidas_spider
 ```
 
-## 📊 Datos Extraídos
+## Datos Extraídos
 
 El scraper extrae la siguiente información de cada producto:
 
@@ -83,36 +81,4 @@ El scraper extrae la siguiente información de cada producto:
 - **Información Nutricional**: Fabricante, ingredientes
 - **Imágenes**: Enlaces a imágenes del producto
 
-## 🔒 Consideraciones Éticas
 
-- ✅ Respeta el archivo `robots.txt` del sitio
-- ✅ Implementa delays entre requests (1-2 segundos)
-- ✅ Usa User-Agent identificable
-- ✅ Limita concurrencia a 1 request por dominio
-- ✅ Implementa retry automático para errores temporales
-- ✅ Incluye headers de identificación del scraper
-
-## 📝 Logs
-
-Los logs se guardan en `logs/scraper.log` e incluyen:
-- Estadísticas de scraping
-- Errores y warnings
-- Tiempo de ejecución
-- Velocidad de procesamiento
-
-## ⚠️ Importante
-
-Este scraper está diseñado para uso educativo y de investigación. Asegúrate de:
-
-1. Respetar los términos de servicio del sitio web
-2. No sobrecargar el servidor con requests excesivos
-3. Usar los datos extraídos de manera responsable
-4. Cumplir con las leyes de protección de datos aplicables
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Por favor:
-
-1. Mantén el código ético y responsable
-2. Sigue las mejores prácticas de web scraping
-3. Actualiza la documentación según sea necesario
