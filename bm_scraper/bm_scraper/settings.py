@@ -18,7 +18,7 @@ ADDONS = {}
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "bm_scraper (+http://www.yourdomain.com)"
 
-# Obey robots.txt rules
+# Obey robots.txt rules - IMPORTANTE: Respetar las reglas del sitio
 ROBOTSTXT_OBEY = True
 
 # Concurrency and throttling settings
@@ -46,9 +46,11 @@ DOWNLOAD_DELAY = 1
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "bm_scraper.middlewares.BmScraperDownloaderMiddleware": 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    "bm_scraper.middlewares.rate_limiting.RateLimitingMiddleware": 350,
+    "bm_scraper.middlewares.rate_limiting.UserAgentRotationMiddleware": 400,
+    "bm_scraper.middlewares.rate_limiting.EthicalScrapingMiddleware": 500,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -86,11 +88,23 @@ DOWNLOAD_DELAY = 1
 # Set settings whose default value is deprecated to a future-proof value
 FEED_EXPORT_ENCODING = "utf-8"
 
-# Override default settings
-ROBOTSTXT_OBEY = False
+# Configuración ética de scraping
 RANDOMIZE_DOWNLOAD_DELAY = True
+RANDOMIZE_DOWNLOAD_DELAY_MAX = 2.0
 
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+# User-Agent identificable para el scraper
+USER_AGENT = 'BM-Scraper/1.0 (+https://github.com/tu-repo/bm-scraper)'
+
+# Configuración de logging
+LOG_LEVEL = 'INFO'
+LOG_FILE = 'logs/scraper.log'
+
+# Configuración de retry para errores HTTP
+RETRY_TIMES = 3
+RETRY_HTTP_CODES = [500, 502, 503, 504, 408, 429]
+
+# Configuración de timeout
+DOWNLOAD_TIMEOUT = 30
 
 # Output
 import os
