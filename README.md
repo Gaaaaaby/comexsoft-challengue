@@ -1,82 +1,148 @@
-# BM Supermercados Scraper
 
-Scraper para extraer información de productos de BM Supermercados.
+# BM Supermercados Beverage Scraper
 
-## Características
+## Overview
 
-- **Arquitectura Modular**: Separación clara de responsabilidades
-- **Configuración Segura**: Credenciales en variables de entorno
-- **Rate Limiting**: Control de velocidad para no sobrecargar el servidor
+This Python script scrapes beverage product data from the BM Supermercados API, extracting details such as product identification, pricing, promotions, nutritional information, and images. The scraper is designed with a modular architecture, secure configuration via environment variables, and rate limiting to prevent overloading the server. Output is saved as a JSON file in the `output` directory.
 
-## Estructura del Proyecto
+## Features
+
+- Modular architecture with clear separation of responsibilities.
+- Secure configuration using environment variables for sensitive data like proxy credentials.
+- Rate limiting to ensure ethical scraping and avoid server overload.
+- Error handling with retries and fallback data for robustness.
+- Deduplication of products using EANs and product IDs.
+- Pagination support to fetch all available products efficiently.
+
+## Project Structure
 
 ```
 bm_scraper/
 ├── bm_scraper/
 │   ├── config/
-│   │   ├── proxy_config.py      # Configuración de proxy
-│   │   └── environment.py       # Variables de entorno
+│   │   ├── proxy_config.py      # Proxy configuration
+│   │   └── environment.py       # Environment variable loading
 │   ├── middlewares/
-│   │   └── rate_limiting.py     # Middlewares éticos
+│   │   └── rate_limiting.py     # Rate limiting middleware
 │   ├── spiders/
-│   │   ├── bebidas_spider.py    # Spider principal
-│   │   └── items.py             # Definición de items
+│   │   ├── bebidas_scraper_simple.py  # Main scraper script
+│   │   └── items.py             # Product item definitions
 │   ├── utils/
-│   │   ├── cookie_manager.py    # Gestión de cookies
-│   │   ├── selenium_driver.py   # Configuración del driver
-│   │   └── logging_config.py    # Configuración de logs
-│   └── settings.py              # Configuración de Scrapy
-├── output/                      # Archivos de salida
-├── logs/                        # Archivos de log
-└── env.example                  # Ejemplo de variables de entorno
+        ├── fallback_data.py     # Fallback if there's a failure scraping
+        ├── product_parsers.py   # Adjusting data from products 
+
+│   └── settings.py              # Scrapy settings
+├── output/                      # Directory for JSON output files
+├── logs/                        # Directory for log files
+├── env.example                  # Example environment variable file
+└── requirements.txt             # Project dependencies
 ```
 
-## Configuración
+## Prerequisites
 
-### 1. Variables de Entorno
+- Python 3.8 or higher
+- Dependencies listed in `requirements.txt` (e.g., `requests`)
+- Optional: Proxy service for API requests (configured in `.env`)
 
-Copia `env.example` a `.env` y configura tus credenciales:
+## Setup
+
+### 1. Clone the Repository
 
 ```bash
-cp env.example .env
+git clone <repository_url>
+cd bm_scraper
 ```
 
-Edita `.env`:
-```env
-PROXY_URL=tu_proxy_url
-PROXY_USER=tu_usuario
-PROXY_PASS=tu_password
-```
+### 2. Install Dependencies
 
-### 2. Instalación de Dependencias
+Install the required Python libraries:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Uso
+### 3. Configure Environment Variables
 
-### Ejecutar el Scraper
+Copy the example environment file and update it with your proxy credentials (if applicable):
+
+```bash
+cp env.example .env
+```
+
+Edit `.env` with a text editor:
+
+```env
+PROXY_URL=your_proxy_url
+PROXY_USER=your_username
+PROXY_PASS=your_password
+```
+
+If not using a proxy, leave these fields empty or configure `bm_scraper/config/proxy_config.py` to bypass proxy usage.
+
+### 4. Verify Module Accessibility
+
+Ensure the `bm_scraper` module is accessible. The script uses a dynamic import path (`sys.path.append`). For production, consider restructuring as a proper Python package.
+
+## Usage
+
+### Option 1: Run as a Python Script
+
+Execute the main scraper script directly:
 
 ```bash
 cd bm_scraper
-scrapy crawl bebidas_spider
+python -m bm_scraper.spiders.bebidas_scraper_simple
 ```
 
-### Ejecutar con Python
+### Output
 
-```bash
-cd bm_scraper
-python -m bm_scraper.spiders.bebidas_spider
+The scraper saves results to `output/bm_productos_bebidas.json` in the following format:
+
+```json
+[
+    {
+        "supermarket": "BM Supermercados",
+        "id": "12345",
+        "ean": "8412598007767",
+        "brand": "Estrella Galicia",
+        "description": "Cerveza 0,0 Tostada 33 cl",
+        "category": "Bebidas/Cerveza",
+        "url": "https://www.online.bmsupermercados.es/es/estrella-galicia-0-0-tostada/12345",
+        "image_links": ["https://www.online.bmsupermercados.es/image.jpg"],
+        "measuring_unit": {"format": "unit", "value": 0.33, "unit": "L"},
+        "price": 0.75,
+        "offer_price": null,
+        "unit_price": 2.27,
+        "promotion": "MxN: 4 X 3€ - 4X3,00€",
+        "manufacturer": "Hijeros de Rivera S.A., A Coruña, España",
+        "raw_ingredients": "Agua, malta de cebada, lúpulo"
+    },
+    ...
+]
 ```
 
-## Datos Extraídos
+## Extracted Data
 
-El scraper extrae la siguiente información de cada producto:
+For each product, the scraper collects:
 
-- **Identificación**: ID, EAN, marca
-- **Descripción**: Nombre, categoría, URL
-- **Precios**: Precio regular, precio oferta, precio unitario
-- **Promociones**: Texto de promociones
-- **Información Nutricional**: Fabricante, ingredientes
-- **Imágenes**: Enlaces a imágenes del producto
+- Identification: Product ID, EAN, brand
+- Description: Product name, category, URL
+- Pricing: Regular price, offer price, unit price (per liter)
+- Promotions: Promotion type and description (e.g., "MxN: 4 X 3€")
+- Nutritional Information: Manufacturer details, raw ingredients
+- Images: URLs to product images
+
+## Error Handling
+
+- API Request Failures: Retries up to 3 times with a 2-second delay.
+- Empty Pages: Stops after 3 consecutive empty pages to avoid unnecessary requests.
+- Data Processing Errors: Skips problematic products and logs errors to the console.
+- Fallback Data: Uses `generate_fallback_data()` if no products are scraped, ensuring output is produced.
+
+## Troubleshooting
+
+If the scraper fails to retrieve data:
+
+- Check the `.env` file for correct proxy credentials.
+- Verify the API URLs in `bebidas_scraper_simple.py` are correct and the server is accessible.
+- Ensure the `bm_scraper` module is in the correct path or adjust the import logic.
